@@ -1,6 +1,7 @@
 import React, { FC, ChangeEvent, useState } from "react";
 import { EventEmitter } from "stream";
 import { IPerson } from "./Interfaces";
+import PersonList from "./Components/PersonList";
 import "./App.css";
 
 const App: FC = () => {
@@ -55,7 +56,11 @@ const App: FC = () => {
         </div>
         <button onClick={addPerson}>Add Person</button>
       </div>
-      <div className="peopleList"></div>
+      <div className="peopleList">
+        {pList.map((person: IPerson, key: number) => {
+          return <PersonList key={key} person={person} />;
+        })}
+      </div>
     </div>
   );
 };
