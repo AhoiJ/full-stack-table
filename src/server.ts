@@ -26,7 +26,7 @@ class Server {
     }
 
     private routerConfig() {
-        this.app.use('/people', peopleRouter);
+        this.app.use('/', peopleRouter);
     }
 
     public start = (port: number) => {
