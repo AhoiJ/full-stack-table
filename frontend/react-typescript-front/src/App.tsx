@@ -37,16 +37,16 @@ class App extends Component<{}, Test> {
   };
 
   addPerson() {
-    /*    const firstname = this.state.fName;
+    const firstname = this.state.fName;
     const lastname = this.state.lName;
     const age = this.state.age;
-    */
+
     // important to keep as fname, lname, age
     axios
       .post("http://localhost:4000/people", {
-        fname: "values",
-        lname: "lastname",
-        age: 0,
+        fname: firstname,
+        lname: lastname,
+        age: age,
       })
       .then(function (response) {
         console.log(response);
@@ -54,7 +54,21 @@ class App extends Component<{}, Test> {
       .catch(function (error) {
         console.log(error);
       });
+    this.componentDidMount();
   }
+
+  deletePerson = (personToDelete: number): void => {
+    console.log(personToDelete);
+    axios
+      .delete("http://localhost:4000/people/" + String(personToDelete))
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    this.componentDidMount();
+  };
 
   render(): ReactNode {
     return (
@@ -83,11 +97,17 @@ class App extends Component<{}, Test> {
               onChange={this.handleChange}
             />
           </div>
-          <button onClick={this.addPerson}>Add Person</button>
+          <button onClick={() => this.addPerson()}>Add Person</button>
         </div>
         <div className="peopleList">
           {this.state.peopleList.map((person: IPerson, key: number) => {
-            return <PersonList key={key} person={person} />;
+            return (
+              <PersonList
+                key={key}
+                person={person}
+                deletePerson={this.deletePerson}
+              />
+            );
           })}
         </div>
       </div>

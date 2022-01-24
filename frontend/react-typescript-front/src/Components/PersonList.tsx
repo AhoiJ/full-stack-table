@@ -3,10 +3,10 @@ import { IPerson } from "./../Interfaces";
 
 interface Props {
   person: IPerson;
-  //deletePerson(personName: string): void;
+  deletePerson(personID: number): void;
 }
 
-const PersonList = ({ person }: Props) => {
+const PersonList = ({ person, deletePerson }: Props) => {
   return (
     <div className="person">
       <div className="content">
@@ -16,7 +16,7 @@ const PersonList = ({ person }: Props) => {
       </div>
       <button
         onClick={() => {
-          // deletePerson(person.firstName);
+          deletePerson(person.id);
         }}
       >
         Del
