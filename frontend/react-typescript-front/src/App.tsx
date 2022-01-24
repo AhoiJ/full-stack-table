@@ -1,77 +1,32 @@
-import React, { FC, ChangeEvent, useState } from "react";
+import React, { Component, ReactNode } from "react";
 import { IPerson } from "./Interfaces";
 import PersonList from "./Components/PersonList";
 import "./App.css";
+import axios from "axios";
 
-const App: FC = () => {
-  const [fname, setFname] = useState<string>("");
-  const [lname, setLname] = useState<string>("");
-  const [age, setAge] = useState<number>(0);
-  const [pList, setPList] = useState<IPerson[]>([]);
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    if (event.target.name === "fnameIn") {
-      setFname(event.target.value);
-    } else if (event.target.name === "lnameIn") {
-      setLname(event.target.value);
-    } else {
-      setAge(Number(event.target.value));
-    }
+class App extends Component {
+  state = {
+    peopleList: [],
+    fName: "",
+    lName: "",
+    age: 0,
   };
 
-  const addPerson = (): void => {
-    const newPerson = { firstName: fname, lastName: lname, age: age };
-    setPList([...pList, newPerson]);
-    setFname("");
-    setLname("");
-    setAge(0);
-  };
-  // implement with id
-  const deletePerson = (personToDelete: string): void => {
-    setPList(
-      pList.filter((person) => {
-        return person.firstName != personToDelete;
-      })
+  componentDidMount(): void {
+    axios.get("http://localhost:4000/people").then((res) => {
+      const peopleList = res.data;
+      this.setState({ peopleList });
+      console.log(peopleList);
+    });
+  }
+
+  render(): ReactNode {
+    return (
+      <div className="app">
+        <h1>{this.state.age}</h1>
+      </div>
     );
-  };
-
-  return (
-    <div className="App">
-      <div className="header">
-        <div className="inputContainer">
-          <input
-            type="text"
-            placeholder="First name..."
-            name="fnameIn"
-            value={fname}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Last name..."
-            name="lnameIn"
-            value={lname}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Age..."
-            name="ageIn"
-            value={age}
-            onChange={handleChange}
-          />
-        </div>
-        <button onClick={addPerson}>Add Person</button>
-      </div>
-      <div className="peopleList">
-        {pList.map((person: IPerson, key: number) => {
-          return (
-            <PersonList key={key} person={person} deletePerson={deletePerson} />
-          );
-        })}
-      </div>
-    </div>
-  );
-};
+  }
+}
 
 export default App;

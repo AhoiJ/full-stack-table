@@ -24,6 +24,11 @@ class Server {
     config() {
         this.app.use(body_parser_1.default.urlencoded({ extended: true }));
         this.app.use(body_parser_1.default.json({ limit: '1mb' }));
+        this.app.use(function (req, res, next) {
+            res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            next();
+        });
     }
     dbConnect() {
         dbconnector_1.default.connect(function (err, client, done) {
