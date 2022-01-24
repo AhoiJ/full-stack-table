@@ -1,20 +1,33 @@
-import React, { Component, ReactNode, useState } from "react";
+import React, { Component, ReactNode } from "react";
 import { IPerson } from "./Interfaces";
-import PersonList from "./Components/PersonList";
+//import PersonList from "./Components/PersonList";
 import "./App.css";
 import axios from "axios";
+//import Table from "./Components/Table";
+import EdiTable from "./Components/EdiTable";
 
 interface Test {
   peopleList: [];
   fName: string;
   lName: string;
   age: number;
+  modfName: string;
+  modlName: string;
+  modAge: number;
 }
 
 class App extends Component<{}, Test> {
   constructor(props: any) {
     super(props);
-    this.state = { peopleList: [], fName: "", lName: "", age: 0 };
+    this.state = {
+      peopleList: [],
+      fName: "",
+      lName: "",
+      age: 0,
+      modfName: "",
+      modlName: "",
+      modAge: 0,
+    };
   }
 
   componentDidMount(): void {
@@ -25,13 +38,28 @@ class App extends Component<{}, Test> {
     });
   }
 
+  componentDidUpdate(): void {
+    axios.get("http://localhost:4000/people").then((res) => {
+      const peopleList = res.data;
+      this.setState({ peopleList });
+      //console.log(peopleList);
+    });
+  }
+
   handleChange = (e: any) => {
     if (e.target.name === "fnameIn") {
       this.setState({ fName: e.target.value });
     } else if (e.target.name === "lnameIn") {
       this.setState({ lName: e.target.value });
-    } else {
+    } else if (e.target.name === "ageIn") {
       this.setState({ age: e.target.value });
+    }
+    if (e.target.name === "fnameMod") {
+      this.setState({ modfName: e.target.value });
+    } else if (e.target.name === "lnameMod") {
+      this.setState({ modlName: e.target.value });
+    } else if (e.target.name === "ageMod") {
+      this.setState({ modAge: e.target.value });
     }
     console.log(this.state);
   };
@@ -54,11 +82,11 @@ class App extends Component<{}, Test> {
       .catch(function (error) {
         console.log(error);
       });
+    this.setState({ fName: "", lName: "", age: 0 });
     this.componentDidMount();
   }
 
   deletePerson = (personToDelete: number): void => {
-    console.log(personToDelete);
     axios
       .delete("http://localhost:4000/people/" + String(personToDelete))
       .then(function (response) {
@@ -67,7 +95,28 @@ class App extends Component<{}, Test> {
       .catch(function (error) {
         console.log(error);
       });
-    this.componentDidMount();
+    this.componentDidUpdate();
+  };
+
+  modifyPerson = (personToModify: number): void => {
+    const firstname = this.state.modfName;
+    const lastname = this.state.modlName;
+    const age = this.state.modAge;
+    if (firstname && lastname !== "")
+      axios
+        .put("http://localhost:4000/people/" + String(personToModify), {
+          fname: firstname,
+          lname: lastname,
+          age: age,
+          id: personToModify,
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    this.componentDidUpdate();
   };
 
   render(): ReactNode {
@@ -98,17 +147,32 @@ class App extends Component<{}, Test> {
             />
           </div>
           <button onClick={() => this.addPerson()}>Add Person</button>
+          <div className="modifyContainer">
+            <input
+              type="text"
+              placeholder="First name to modify"
+              name="fnameMod"
+              value={this.state.modfName}
+              onChange={this.handleChange}
+            />
+            <input
+              type="text"
+              placeholder="Last name to modify"
+              name="lnameMod"
+              value={this.state.modlName}
+              onChange={this.handleChange}
+            />
+            <input
+              type="text"
+              placeholder="Age..."
+              name="ageMod"
+              value={this.state.modAge}
+              onChange={this.handleChange}
+            />
+          </div>
         </div>
         <div className="peopleList">
-          {this.state.peopleList.map((person: IPerson, key: number) => {
-            return (
-              <PersonList
-                key={key}
-                person={person}
-                deletePerson={this.deletePerson}
-              />
-            );
-          })}
+          <EdiTable />
         </div>
       </div>
     );
@@ -116,3 +180,24 @@ class App extends Component<{}, Test> {
 }
 
 export default App;
+
+/*
+  <Table
+            peopleList={this.state.peopleList}
+            deletePerson={this.deletePerson}
+            modifyPerson={this.modifyPerson}
+          />
+*/
+
+/* 
+ {this.state.peopleList.map((person: IPerson, key: number) => {
+            return (
+              <PersonList
+                key={key}
+                person={person}
+                deletePerson={this.deletePerson}
+                modifyPerson={this.modifyPerson}
+              />
+            );
+          })}
+*/
