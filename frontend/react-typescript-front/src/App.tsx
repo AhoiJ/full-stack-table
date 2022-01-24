@@ -1,5 +1,4 @@
 import React, { FC, ChangeEvent, useState } from "react";
-import { EventEmitter } from "stream";
 import { IPerson } from "./Interfaces";
 import PersonList from "./Components/PersonList";
 import "./App.css";
@@ -26,6 +25,14 @@ const App: FC = () => {
     setFname("");
     setLname("");
     setAge(0);
+  };
+  // implement with id
+  const deletePerson = (personToDelete: string): void => {
+    setPList(
+      pList.filter((person) => {
+        return person.firstName != personToDelete;
+      })
+    );
   };
 
   return (
@@ -58,7 +65,9 @@ const App: FC = () => {
       </div>
       <div className="peopleList">
         {pList.map((person: IPerson, key: number) => {
-          return <PersonList key={key} person={person} />;
+          return (
+            <PersonList key={key} person={person} deletePerson={deletePerson} />
+          );
         })}
       </div>
     </div>
