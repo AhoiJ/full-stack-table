@@ -3,20 +3,20 @@ import { IPerson } from "./../Interfaces";
 
 interface Props {
   person: IPerson;
-  deletePerson(personName: string): void;
+  //deletePerson(personName: string): void;
 }
 
-const PersonList = ({ person, deletePerson }: Props) => {
+const PersonList = ({ person }: Props) => {
   return (
     <div className="person">
       <div className="content">
-        <span>{person.firstName}</span>
-        <span>{person.lastName}</span>
+        <span>{person.first_name}</span>
+        <span>{person.last_name}</span>
         <span>{person.age}</span>
       </div>
       <button
         onClick={() => {
-          deletePerson(person.firstName);
+          // deletePerson(person.firstName);
         }}
       >
         Del
