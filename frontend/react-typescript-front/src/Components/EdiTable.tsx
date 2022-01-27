@@ -6,8 +6,49 @@ const API_HOST = "http://localhost:4000";
 
 const PEOPLE_API_URL = `${API_HOST}/people`;
 
+const useSortableData = (items: any, config = null) => {
+  const [sortConfig, setSortConfig] = React.useState<any>(config!);
+
+  const sortedItems = React.useMemo(() => {
+    let sortableItems = [...items];
+    if (sortConfig !== null) {
+      sortableItems.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === "ascending" ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === "ascending" ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [items, sortConfig]);
+
+  const requestSort = (key: any) => {
+    let direction = "ascending";
+    if (
+      sortConfig &&
+      sortConfig.key === key &&
+      sortConfig.direction === "ascending"
+    ) {
+      direction = "descending";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  return { items: sortedItems, requestSort, sortConfig };
+};
+
 function EdiTable() {
   const [data, setData] = useState([]);
+  const { items, requestSort, sortConfig } = useSortableData(data);
+  const getClassNamesFor = (name: any) => {
+    if (!sortConfig) {
+      return;
+    }
+    return sortConfig.key === name ? sortConfig.direction : undefined;
+  };
 
   const fetchPeople = () => {
     fetch(`${PEOPLE_API_URL}`)
@@ -133,16 +174,40 @@ function EdiTable() {
       <table>
         <thead>
           <tr>
-            <th>First name</th>
+            <th>
+              <button
+                type="button"
+                onClick={() => requestSort("first_name")}
+                className={getClassNamesFor("first_name")}
+              >
+                First Name
+              </button>
+            </th>
 
-            <th>Last Name</th>
+            <th>
+              <button
+                type="button"
+                onClick={() => requestSort("last_name")}
+                className={getClassNamesFor("last_name")}
+              >
+                Last Name
+              </button>
+            </th>
 
-            <th>Age</th>
+            <th>
+              <button
+                type="button"
+                onClick={() => requestSort("age")}
+                className={getClassNamesFor("age")}
+              >
+                Age
+              </button>
+            </th>
           </tr>
         </thead>
 
         <tbody>
-          {data.map((item: IPerson) => (
+          {items.map((item: IPerson) => (
             <tr key={item.id}>
               <td>
                 {inEditMode.status && inEditMode.rowKey === item.id ? (
