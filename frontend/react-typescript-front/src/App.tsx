@@ -1,9 +1,7 @@
 import React, { Component, ReactNode } from "react";
 import { IPerson } from "./Interfaces";
-//import PersonList from "./Components/PersonList";
 import "./App.css";
 import axios from "axios";
-//import Table from "./Components/Table";
 import EdiTable from "./Components/EdiTable";
 
 interface Test {
@@ -75,18 +73,6 @@ class App extends Component<{}, Test> {
     window.location.reload();
   }
 
-  deletePerson = (personToDelete: number): void => {
-    axios
-      .delete("http://localhost:4000/people/" + String(personToDelete))
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    this.componentDidUpdate();
-  };
-
   render(): ReactNode {
     return (
       <div className="App">
@@ -125,24 +111,3 @@ class App extends Component<{}, Test> {
 }
 
 export default App;
-
-/*
-  <Table
-            peopleList={this.state.peopleList}
-            deletePerson={this.deletePerson}
-            modifyPerson={this.modifyPerson}
-          />
-*/
-
-/* 
- {this.state.peopleList.map((person: IPerson, key: number) => {
-            return (
-              <PersonList
-                key={key}
-                person={person}
-                deletePerson={this.deletePerson}
-                modifyPerson={this.modifyPerson}
-              />
-            );
-          })}
-*/
