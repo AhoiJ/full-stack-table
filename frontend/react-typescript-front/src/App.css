@@ -111,12 +111,16 @@ body {
 }
 */
 
+.container {
+  display: flex;
+  flex-direction: column;
+}
 .container table thead tr th {
   padding: 20px;
-  text-align: left;
+  text-align: center;
   border: 1px solid black;
   background-color: lightgray;
-  border-bottom: 1px solid #cccccc;
+  border-bottom: 1px solid black;
 }
 .container table tbody tr td {
   padding: 10px;

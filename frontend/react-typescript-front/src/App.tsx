@@ -72,6 +72,7 @@ class App extends Component<{}, Test> {
       });
     this.setState({ fName: "", lName: "", age: 0 });
     this.componentDidMount();
+    window.location.reload();
   }
 
   deletePerson = (personToDelete: number): void => {

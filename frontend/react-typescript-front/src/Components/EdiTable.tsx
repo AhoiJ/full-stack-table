@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IPerson } from "./../Interfaces";
 import "./../App.css";
-import { isDeleteExpression } from "typescript";
 
 const API_HOST = "http://localhost:4000";
 
@@ -203,30 +202,32 @@ function EdiTable() {
                     </button>
                   </React.Fragment>
                 ) : (
-                  <button
-                    className={"btn-primary"}
-                    onClick={() =>
-                      onEdit({
-                        id: item.id,
-                        currentFirstName: item.first_name,
-                        currentLastName: item.last_name,
-                        currentAge: item.age,
-                      })
-                    }
-                  >
-                    Edit
-                  </button>
+                  <React.Fragment>
+                    <button
+                      className={"btn-primary"}
+                      onClick={() =>
+                        onEdit({
+                          id: item.id,
+                          currentFirstName: item.first_name,
+                          currentLastName: item.last_name,
+                          currentAge: item.age,
+                        })
+                      }
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className={"btn-delete"}
+                      onClick={() =>
+                        deletePerson({
+                          id: item.id,
+                        })
+                      }
+                    >
+                      Delete
+                    </button>
+                  </React.Fragment>
                 )}
-                <button
-                  className={"btn-delete"}
-                  onClick={() =>
-                    deletePerson({
-                      id: item.id,
-                    })
-                  }
-                >
-                  Delete
-                </button>
               </td>
             </tr>
           ))}
