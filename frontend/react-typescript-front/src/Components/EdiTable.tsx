@@ -169,8 +169,7 @@ function EdiTable() {
 
   return (
     <div className="container">
-      <h1>Simple People Table</h1>
-
+      <h1>Personnel list</h1>
       <table>
         <thead>
           <tr>
@@ -205,7 +204,6 @@ function EdiTable() {
             </th>
           </tr>
         </thead>
-
         <tbody>
           {items.map((item: IPerson) => (
             <tr key={item.id}>
@@ -220,7 +218,6 @@ function EdiTable() {
                 )}
               </td>
               <td>
-                 
                 {inEditMode.status && inEditMode.rowKey === item.id ? (
                   <input
                     value={lastName}
@@ -231,7 +228,6 @@ function EdiTable() {
                 )}
               </td>
               <td>
-                 
                 {inEditMode.status && inEditMode.rowKey === item.id ? (
                   <input
                     value={age}
@@ -241,7 +237,6 @@ function EdiTable() {
                   item.age
                 )}
               </td>
-
               <td>
                 {inEditMode.status && inEditMode.rowKey === item.id ? (
                   <React.Fragment>

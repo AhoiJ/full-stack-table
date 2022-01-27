@@ -75,6 +75,21 @@ body {
   border: 1px solid black;
   background-color: lightgray;
 }
+.container table thead tr button::after {
+  content: "⇅";
+  display: inline-block;
+  margin-left: 1em;
+}
+.container table thead tr button.ascending::after {
+  content: "↓";
+  display: inline-block;
+  margin-left: 1em;
+}
+.container table thead tr button.descending::after {
+  content: "↑";
+  display: inline-block;
+  margin-left: 1em;
+}
 .container table tbody tr td {
   padding: 10px;
   text-align: center;
