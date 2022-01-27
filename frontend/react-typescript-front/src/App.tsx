@@ -11,9 +11,6 @@ interface Test {
   fName: string;
   lName: string;
   age: number;
-  modfName: string;
-  modlName: string;
-  modAge: number;
 }
 
 class App extends Component<{}, Test> {
@@ -24,9 +21,6 @@ class App extends Component<{}, Test> {
       fName: "",
       lName: "",
       age: 0,
-      modfName: "",
-      modlName: "",
-      modAge: 0,
     };
   }
 
@@ -51,16 +45,10 @@ class App extends Component<{}, Test> {
       this.setState({ fName: e.target.value });
     } else if (e.target.name === "lnameIn") {
       this.setState({ lName: e.target.value });
-    } else if (e.target.name === "ageIn") {
+    } else {
       this.setState({ age: e.target.value });
     }
-    if (e.target.name === "fnameMod") {
-      this.setState({ modfName: e.target.value });
-    } else if (e.target.name === "lnameMod") {
-      this.setState({ modlName: e.target.value });
-    } else if (e.target.name === "ageMod") {
-      this.setState({ modAge: e.target.value });
-    }
+
     console.log(this.state);
   };
 
@@ -98,27 +86,6 @@ class App extends Component<{}, Test> {
     this.componentDidUpdate();
   };
 
-  modifyPerson = (personToModify: number): void => {
-    const firstname = this.state.modfName;
-    const lastname = this.state.modlName;
-    const age = this.state.modAge;
-    if (firstname && lastname !== "")
-      axios
-        .put("http://localhost:4000/people/" + String(personToModify), {
-          fname: firstname,
-          lname: lastname,
-          age: age,
-          id: personToModify,
-        })
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    this.componentDidUpdate();
-  };
-
   render(): ReactNode {
     return (
       <div className="App">
@@ -147,29 +114,6 @@ class App extends Component<{}, Test> {
             />
           </div>
           <button onClick={() => this.addPerson()}>Add Person</button>
-          <div className="modifyContainer">
-            <input
-              type="text"
-              placeholder="First name to modify"
-              name="fnameMod"
-              value={this.state.modfName}
-              onChange={this.handleChange}
-            />
-            <input
-              type="text"
-              placeholder="Last name to modify"
-              name="lnameMod"
-              value={this.state.modlName}
-              onChange={this.handleChange}
-            />
-            <input
-              type="text"
-              placeholder="Age..."
-              name="ageMod"
-              value={this.state.modAge}
-              onChange={this.handleChange}
-            />
-          </div>
         </div>
         <div className="peopleList">
           <EdiTable />

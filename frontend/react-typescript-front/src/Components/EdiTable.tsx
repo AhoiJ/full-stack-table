@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { IPerson } from "./../Interfaces";
+import "./../App.css";
+import { isDeleteExpression } from "typescript";
 
 const API_HOST = "http://localhost:4000";
 
@@ -24,13 +26,19 @@ function EdiTable() {
   });
 
   const [firstName, setFirstName] = useState<string | undefined>();
+  const [lastName, setLastName] = useState<string | undefined>();
+  const [age, setAge] = useState<string | undefined>();
 
   const onEdit = ({
     id,
     currentFirstName,
+    currentLastName,
+    currentAge,
   }: {
     id: any;
     currentFirstName: any;
+    currentLastName: any;
+    currentAge: any;
   }) => {
     setInEditMode({
       status: true,
@@ -39,6 +47,8 @@ function EdiTable() {
     });
 
     setFirstName(currentFirstName);
+    setLastName(currentLastName);
+    setAge(currentAge);
   };
 
   const updatePeople = ({
@@ -68,14 +78,23 @@ function EdiTable() {
       .then((response) => response.json())
 
       .then((json) => {
-        // reset inEditMode and unit price state values
-
+        // reset inEditMode and people state values
         onCancel();
 
         // fetch the updated data
-
         fetchPeople();
       });
+  };
+
+  const deletePerson = ({ id }: { id: any }) => {
+    fetch(`${PEOPLE_API_URL}/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    }).then(() => {
+      fetchPeople();
+    });
   };
 
   const onSave = ({
@@ -101,14 +120,16 @@ function EdiTable() {
       rowKey: null,
     });
 
-    // reset the unit price state value
+    // reset the people state value
 
     setFirstName("");
+    setLastName("");
+    setAge("");
   };
 
   return (
     <div className="container">
-      <h1>Simple People</h1>
+      <h1>Simple People Table</h1>
 
       <table>
         <thead>
@@ -125,7 +146,6 @@ function EdiTable() {
           {data.map((item: IPerson) => (
             <tr key={item.id}>
               <td>
-                 
                 {inEditMode.status && inEditMode.rowKey === item.id ? (
                   <input
                     value={firstName}
@@ -136,6 +156,29 @@ function EdiTable() {
                 )}
               </td>
               <td>
+                 
+                {inEditMode.status && inEditMode.rowKey === item.id ? (
+                  <input
+                    value={lastName}
+                    onChange={(event) => setLastName(event.target.value)}
+                  />
+                ) : (
+                  item.last_name
+                )}
+              </td>
+              <td>
+                 
+                {inEditMode.status && inEditMode.rowKey === item.id ? (
+                  <input
+                    value={age}
+                    onChange={(event) => setAge(event.target.value)}
+                  />
+                ) : (
+                  item.age
+                )}
+              </td>
+
+              <td>
                 {inEditMode.status && inEditMode.rowKey === item.id ? (
                   <React.Fragment>
                     <button
@@ -144,8 +187,8 @@ function EdiTable() {
                         onSave({
                           id: item.id,
                           newFirstName: firstName,
-                          newLastName: item.last_name,
-                          newAge: item.age,
+                          newLastName: lastName,
+                          newAge: age,
                         })
                       }
                     >
@@ -154,7 +197,6 @@ function EdiTable() {
 
                     <button
                       className={"btn-secondary"}
-                      style={{ marginLeft: 8 }}
                       onClick={() => onCancel()}
                     >
                       Cancel
@@ -164,15 +206,28 @@ function EdiTable() {
                   <button
                     className={"btn-primary"}
                     onClick={() =>
-                      onEdit({ id: item.id, currentFirstName: item.first_name })
+                      onEdit({
+                        id: item.id,
+                        currentFirstName: item.first_name,
+                        currentLastName: item.last_name,
+                        currentAge: item.age,
+                      })
                     }
                   >
                     Edit
                   </button>
                 )}
+                <button
+                  className={"btn-delete"}
+                  onClick={() =>
+                    deletePerson({
+                      id: item.id,
+                    })
+                  }
+                >
+                  Delete
+                </button>
               </td>
-              <td> {item.last_name}</td>
-              <td> {item.age}</td>
             </tr>
           ))}
         </tbody>
