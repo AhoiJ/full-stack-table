@@ -6,6 +6,7 @@ const API_HOST = "http://localhost:4000";
 
 const PEOPLE_API_URL = `${API_HOST}/people`;
 
+// sorting function
 const useSortableData = (items: any, config = null) => {
   const [sortConfig, setSortConfig] = React.useState<any>(config!);
 
@@ -69,6 +70,7 @@ function EdiTable() {
   const [lastName, setLastName] = useState<string | undefined>();
   const [age, setAge] = useState<string | undefined>();
 
+  // store values and set edit mode on
   const onEdit = ({
     id,
     currentFirstName,
@@ -90,7 +92,7 @@ function EdiTable() {
     setLastName(currentLastName);
     setAge(currentAge);
   };
-
+  // get updated data to table
   const updatePeople = ({
     id,
     newFirstName,
@@ -125,7 +127,7 @@ function EdiTable() {
         fetchPeople();
       });
   };
-
+  // handles deleting
   const deletePerson = ({ id }: { id: any }) => {
     fetch(`${PEOPLE_API_URL}/${id}`, {
       method: "DELETE",
@@ -136,7 +138,7 @@ function EdiTable() {
       fetchPeople();
     });
   };
-
+  // sends edited data to database
   const onSave = ({
     id,
     newFirstName,
@@ -153,7 +155,6 @@ function EdiTable() {
 
   const onCancel = () => {
     // reset the inEditMode state value
-
     setInEditMode({
       status: false,
 
@@ -161,7 +162,6 @@ function EdiTable() {
     });
 
     // reset the people state value
-
     setFirstName("");
     setLastName("");
     setAge("");

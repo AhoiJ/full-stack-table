@@ -1,17 +1,20 @@
 import React, { Component, ReactNode } from "react";
-import { IPerson } from "./Interfaces";
 import "./App.css";
 import axios from "axios";
 import EdiTable from "./Components/EdiTable";
 
-interface Test {
+interface People {
   peopleList: [];
   fName: string;
   lName: string;
   age: number;
 }
 
-class App extends Component<{}, Test> {
+const API_HOST = "http://localhost:4000";
+
+const PEOPLE_API_URL = `${API_HOST}/people`;
+
+class App extends Component<{}, People> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -21,23 +24,21 @@ class App extends Component<{}, Test> {
       age: 0,
     };
   }
-
+  // updates data
   componentDidMount(): void {
-    axios.get("http://localhost:4000/people").then((res) => {
+    axios.get(PEOPLE_API_URL).then((res) => {
       const peopleList = res.data;
       this.setState({ peopleList });
-      console.log(peopleList);
     });
   }
-
+  // updates data
   componentDidUpdate(): void {
-    axios.get("http://localhost:4000/people").then((res) => {
+    axios.get(PEOPLE_API_URL).then((res) => {
       const peopleList = res.data;
       this.setState({ peopleList });
-      //console.log(peopleList);
     });
   }
-
+  // stores input in add person fields
   handleChange = (e: any) => {
     if (e.target.name === "fnameIn") {
       this.setState({ fName: e.target.value });
@@ -50,14 +51,14 @@ class App extends Component<{}, Test> {
     console.log(this.state);
   };
 
+  // adds a person to database
   addPerson() {
     const firstname = this.state.fName;
     const lastname = this.state.lName;
     const age = this.state.age;
 
-    // important to keep as fname, lname, age
     axios
-      .post("http://localhost:4000/people", {
+      .post(PEOPLE_API_URL, {
         fname: firstname,
         lname: lastname,
         age: age,
@@ -93,7 +94,7 @@ class App extends Component<{}, Test> {
               onChange={this.handleChange}
             />
             <input
-              type="text"
+              type="number"
               placeholder="Age..."
               name="ageIn"
               value={this.state.age}
